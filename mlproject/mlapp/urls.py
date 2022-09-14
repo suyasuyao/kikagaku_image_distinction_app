@@ -16,12 +16,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.http import HttpResponse
+from django.shortcuts import render
 
 def test(request):
   return HttpResponse('テストページ')
 
 
+def test(request):
+  return HttpResponse('テストページ')
+
+def test2(request):
+  # test2html = loader.render_to_string('test2.html')
+  test2html = render(request,'test2.html')
+  return test2html
+
 urlpatterns = [
     # テスト用
-    path('test/', test)
+    path('test/', test),
+    path('test2/', test2),
 ]
