@@ -21,4 +21,8 @@ python3 manage.py makemigrations
 # herokuデプロイするとき
 ```
 git subtree push --prefix mlproject heroku main
+heroku run python manage.py migrate
+heroku run python manage.py createsuperuser
+#user yoo メール　: test@example.com　パスワード　yyoo1122
+
 ```
