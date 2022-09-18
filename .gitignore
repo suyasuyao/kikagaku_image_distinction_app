@@ -1,5 +1,6 @@
 settings.json
 db.sqlite3
+djangovenv/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
