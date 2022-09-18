@@ -42,3 +42,7 @@ def result(request):
 
     # 編集
     return render(request, 'mlapp/result.html', {'y':y, 'y_proba':round(y_proba[y], 2)})
+
+def history(request):
+    customers = Customer.objects.all()
+    return render(request, 'mlapp/history.html', {'customers':customers})
