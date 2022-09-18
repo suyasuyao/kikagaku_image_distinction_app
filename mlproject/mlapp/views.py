@@ -41,4 +41,4 @@ def result(request):
     customer.save() # データを保存
 
     # 編集
-    return render(request, 'result.html', {'y':y, 'y_proba':round(y_proba[y], 2)})
+    return render(request, 'mlapp/result.html', {'y':y, 'y_proba':round(y_proba[y], 2)})
