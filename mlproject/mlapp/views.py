@@ -43,8 +43,15 @@ def result(request):
     return render(request, 'mlapp/result.html', {'y':y, 'y_proba':round(y_proba[y], 2)})
 
 def history(request):
-    customers = Customer.objects.all()
-    return render(request, 'mlapp/history.html', {'customers':customers})
+    if request.method == 'POST': # POSTメソッドが送信された場合
+        d_id = request.POST # POSTされた値を取得→顧客ID
+        d_customer = Customer.objects.filter(id=d_id['d_id']) # filterメソッドでidが一致するCustomerのデータを取得
+        d_customer.delete() # 取得した顧客データを消去
+        customers = Customer.objects.all() # 顧客全データを取得
+        return render(request, 'mlapp/history.html', {'customers':customers})
+    else:
+        customers = Customer.objects.all()
+        return render(request, 'mlapp/history.html', {'customers':customers})
 
 # ログインページ
 class Login(LoginView):
