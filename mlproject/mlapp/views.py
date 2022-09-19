@@ -1,11 +1,10 @@
 from django.shortcuts import render,redirect
-from .forms import InputForm
-
-
+from .forms import InputForm, LoginForm # 追加
 import joblib
 import numpy as np
-from .models import Customer
+from .models import Customer # 追加
 
+from django.contrib.auth.views import LoginView
 # モデルの読み込み
 loaded_model = joblib.load('model/ml_model.pkl') 
 
@@ -46,3 +45,8 @@ def result(request):
 def history(request):
     customers = Customer.objects.all()
     return render(request, 'mlapp/history.html', {'customers':customers})
+
+# ログインページ
+class Login(LoginView):
+    form_class = LoginForm
+    template_name = 'mlapp/login.html'
