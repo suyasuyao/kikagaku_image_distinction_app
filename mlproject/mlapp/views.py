@@ -1,3 +1,4 @@
+from email import message
 from django.shortcuts import render,redirect
 from .forms import InputForm, LoginForm, SignUpForm # 追加
 import joblib
@@ -78,6 +79,8 @@ def signup(request):
         login(request, new_user)
         # ログイン後のリダイレクト処理
       return redirect('index')
+    else :
+      return render(request, 'mlapp/signup.html', {'form': form}) 
   # POST で送信がなかった場合の処理
   else:
     form = SignUpForm()
