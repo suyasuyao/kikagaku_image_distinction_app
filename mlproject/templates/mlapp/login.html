@@ -1,0 +1,26 @@
+{% extends "mlapp/base.html" %}
+
+{% block content %}
+<!-- 認証失敗時の警告文 -->
+{% if form.errors %}
+<p>ログイン認証に失敗しました。</p>
+{% endif %}
+
+<div class="container" style="margin-top: 30px;">
+  <form method="POST">{% csrf_token %}
+    {{ form.username }}
+    {{ form.password }}
+    <div class="container mt-4">
+      <div class='btn-toolbar' role="toolbar">
+        <div class="btn-group" role="group">
+          <div>
+            <button type="submit" value="login" class="btn btn-primary mr-4" >login</button>
+          </div>
+          <div>
+            <a class="btn btn-primary" href="{% url 'signup' %}">signup</a>
+          </div>
+        </div>
+      </div>
+  </form>
+</div>
+{% endblock %}
