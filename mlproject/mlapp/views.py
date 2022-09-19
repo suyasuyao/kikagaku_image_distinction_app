@@ -4,7 +4,7 @@ import joblib
 import numpy as np
 from .models import Customer # 追加
 
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView,LogoutView
 # モデルの読み込み
 loaded_model = joblib.load('model/ml_model.pkl') 
 
@@ -50,3 +50,6 @@ def history(request):
 class Login(LoginView):
     form_class = LoginForm
     template_name = 'mlapp/login.html'
+
+class Logout(LogoutView):
+    template_name = 'mlapp/base.html'
