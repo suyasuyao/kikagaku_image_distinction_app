@@ -1,18 +1,21 @@
 from email import message
 from django.shortcuts import render,redirect
-from .forms import InputForm, LoginForm, SignUpForm # 追加
+from .forms import InputForm, LoginForm, SignUpForm
 import joblib
 import numpy as np
-from .models import Customer # 追加
+from .models import Customer 
 
-from django.contrib.auth import login, authenticate # 追加
+from django.contrib.auth import login, authenticate 
 from django.contrib.auth.views import LoginView,LogoutView
+from django.contrib.auth.decorators import login_required # 追加
+
 # モデルの読み込み
 loaded_model = joblib.load('model/ml_model.pkl') 
 
 def index(request):
     return render(request, 'mlapp/index.html')
 
+@login_required
 def input_form(request):
     # 下記の様に編集
     if request.method == 'POST':
