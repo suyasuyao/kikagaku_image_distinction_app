@@ -2,7 +2,7 @@ from django import forms # Djangoが準備しているforms
 from .models import Customer # モデルの部分で定義したDBのテーブル
 from django.contrib.auth.forms import AuthenticationForm , UserCreationForm # 追加
 from django.contrib.auth.models import User
-
+from .models import ModelFile
 class InputForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(InputForm, self).__init__(*args, **kwargs)
@@ -31,3 +31,8 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'password1', 'password2', )
+
+class ImageForm(forms.ModelForm):
+   class Meta:
+       model = ModelFile
+       fields = ('image',)

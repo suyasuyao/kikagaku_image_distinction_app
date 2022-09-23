@@ -37,3 +37,8 @@ class Customer(models.Model):
       return '%s,%s' % (self.registered_date.strftime('%Y-%m-%d'), self.last_name+self.first_name)
     else:
       return '%s, %s, %d, %s' % (self.registered_date.strftime('%Y-%m-%d'), self.last_name+self.first_name, self.result, self.comment)
+
+
+
+class ModelFile(models.Model):
+  image = models.ImageField(upload_to='documents/')
