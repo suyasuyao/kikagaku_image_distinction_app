@@ -9,6 +9,8 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.views import LoginView,LogoutView
 from django.contrib.auth.decorators import login_required # 追加
 
+from .forms import ImageForm
+
 # モデルの読み込み
 loaded_model = joblib.load('model/ml_model.pkl') 
 
@@ -88,3 +90,12 @@ def signup(request):
   else:
     form = SignUpForm()
     return render(request, 'mlapp/signup.html', {'form': form})
+
+def image_upload(request):
+    if request.method == 'POST':
+        form = ImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            img_name = request.FILES['image']
+            img_url = 'media/documents/{}'.format(img_name)
+        return render(request, 'image.html', {'img_url':img_url})
