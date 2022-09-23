@@ -98,4 +98,7 @@ def image_upload(request):
             form.save()
             img_name = request.FILES['image']
             img_url = 'media/documents/{}'.format(img_name)
-        return render(request, 'image.html', {'img_url':img_url})
+        return render(request, 'mlapp/image.html', {'img_url':img_url})
+    else:
+        form = ImageForm()
+        return render(request, 'mlapp/index.html', {'form':form})
