@@ -3,7 +3,7 @@ from django.shortcuts import render,redirect
 from .forms import InputForm, LoginForm, SignUpForm
 import joblib
 import numpy as np
-from .models import Customer 
+from .models import Customer, ModelFile 
 
 from django.contrib.auth import login, authenticate 
 from django.contrib.auth.views import LoginView,LogoutView
@@ -98,7 +98,32 @@ def image_upload(request):
             form.save()
             img_name = request.FILES['image']
             img_url = 'media/documents/{}'.format(img_name)
-        return render(request, 'mlapp/image.html', {'img_url':img_url})
+            animal_name = '動物名'
+            proba = '3'
+
+
+            # 最新の画像のデータを取得
+
+            # data = ModelFile.objects.order_by('id').reverse().values_list('image')
+
+            # x = np.array([data[0]])
+            # y = loaded_model.predict(x)
+            # y_proba = loaded_model.predict_proba(x)
+            # y_proba = y_proba * 100 # 追加
+            # y, y_proba = y[0], y_proba[0] # 追加
+
+          # 推論結果を保存
+            modelfile = ModelFile.objects.order_by('id').reverse()[0] # Customerの切り出し
+            modelfile.proba = proba
+            modelfile.animal_name = animal_name
+            modelfile.save() # データを保存
+
+
+        
+            context = {'img_url':img_url,'animal_name': animal_name, 'proba':proba}
+
+            
+        return render(request, 'mlapp/image.html', context)
     else:
         form = ImageForm()
         return render(request, 'mlapp/index.html', {'form':form})

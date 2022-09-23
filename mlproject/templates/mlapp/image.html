@@ -1,0 +1,15 @@
+{% extends 'mlapp/base.html' %}
+
+{% block title %}審査結果{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 20px;">
+  <h2>動物名{{animal_name}}</h2>
+
+  <p>信頼度は{{proba}}％です。</p>
+
+    <!-- 追加 -->
+  <a href="/history"><button class="btn btn-primary" type="button" name="history">顧客リスト一覧</button></a>
+</div>
+
+{% endblock %}

@@ -36,3 +36,4 @@ class ImageForm(forms.ModelForm):
    class Meta:
        model = ModelFile
        fields = ('image',)
+      #  exclude = ['id', 'animal_name', 'proba', 'comment', 'registered_date']
