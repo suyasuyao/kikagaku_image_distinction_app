@@ -37,3 +37,13 @@ class Customer(models.Model):
       return '%s,%s' % (self.registered_date.strftime('%Y-%m-%d'), self.last_name+self.first_name)
     else:
       return '%s, %s, %d, %s' % (self.registered_date.strftime('%Y-%m-%d'), self.last_name+self.first_name, self.result, self.comment)
+
+
+
+class ModelFile(models.Model):
+  id = models.AutoField(primary_key=True)
+  image = models.ImageField(upload_to='documents/')
+  animal_name = models.CharField('動物名', max_length=30, default='')
+  proba = models.FloatField(default=0.0)
+  comment = models.CharField(max_length=200, blank=True, null=True)
+  registered_date = models.DateField(default=date.today()) #default=date.today() : 本日の日付をデフォルトに設定
