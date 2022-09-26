@@ -33,7 +33,10 @@ class SignUpForm(UserCreationForm):
         fields = ('username', 'password1', 'password2', )
 
 class ImageForm(forms.ModelForm):
-   class Meta:
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    self.fields['image'].widget.attrs['id'] = 'image-input'
+  class Meta:
        model = ModelFile
        fields = ('image',)
       #  exclude = ['id', 'animal_name', 'proba', 'comment', 'registered_date']
