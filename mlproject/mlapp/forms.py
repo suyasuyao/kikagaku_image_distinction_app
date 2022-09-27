@@ -16,6 +16,8 @@ class InputForm(forms.ModelForm):
 class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["username"].widget.attrs["id"] = "username"
+        self.fields["password"].widget.attrs["id"] = "password"
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['placeholder'] = field.label
