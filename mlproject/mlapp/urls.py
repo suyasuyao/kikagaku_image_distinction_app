@@ -14,7 +14,7 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'), # 追加
 
     path('', views.image_upload, name='image_upload'),
-    path('img_url/', views.image_upload, name='image_upload'),
+    #path('img_url/', views.image_upload, name='image_upload'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
