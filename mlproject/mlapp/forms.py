@@ -25,6 +25,9 @@ class LoginForm(AuthenticationForm):
 class SignUpForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["username"].widget.attrs["id"] = "username"
+        self.fields["password1"].widget.attrs["id"] = "password1"
+        self.fields["password2"].widget.attrs["id"] = "password2"
         #htmlの表示を変更可能にします
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
