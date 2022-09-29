@@ -11,8 +11,21 @@ from django.contrib.auth.decorators import login_required # 追加
 
 from .forms import ImageForm
 
+from model.animal_model import Net
+
+import torch
+# import pandas as pd
+from torchvision import transforms
+from PIL import Image
+
 # モデルの読み込み
-loaded_model = joblib.load('model/ml_model.pkl') 
+#loaded_model = joblib.load('model/ml_model.pkl') 
+
+net = Net().cpu().eval()
+net.load_state_dict(torch.load('model/animal_weight.pt', map_location=torch.device('cpu')))
+
+
+#推測結果の数値をもとに文字に戻す。
 
 def index(request):
     return render(request, 'mlapp/index.html')
@@ -34,17 +47,17 @@ def result(request):
 
     data = Customer.objects.order_by('id').reverse().values_list('limit_balance', 'education', 'marriage', 'age')
 
-    x = np.array([data[0]])
-    y = loaded_model.predict(x)
-    y_proba = loaded_model.predict_proba(x)
-    y_proba = y_proba * 100 # 追加
-    y, y_proba = y[0], y_proba[0] # 追加
+    # x = np.array([data[0]])
+    # y = loaded_model.predict(x)
+    # y_proba = loaded_model.predict_proba(x)
+    # y_proba = y_proba * 100 # 追加
+    # y, y_proba = y[0], y_proba[0] # 追加
 
   # 推論結果を保存
-    customer = Customer.objects.order_by('id').reverse()[0] # Customerの切り出し
-    customer.proba = y_proba[y]
-    customer.result = y
-    customer.save() # データを保存
+    # customer = Customer.objects.order_by('id').reverse()[0] # Customerの切り出し
+    # customer.proba = y_proba[y]
+    # customer.result = y
+    # customer.save() # データを保存
 
     # 編集
     return render(request, 'mlapp/result.html', {'y':y, 'y_proba':round(y_proba[y], 2)})
@@ -113,10 +126,42 @@ def image_upload(request):
             # y, y_proba = y[0], y_proba[0] # 追加
 
           # 推論結果を保存
-            modelfile = ModelFile.objects.order_by('id').reverse()[0] # Customerの切り出し
+            modelfile = ModelFile.objects.order_by('id').reverse()[0]
+            # image = modelfile.image 
+
+            # pred_imgs = []
+            # for (img, label) in test:
+            #   pred_imgs.append(img)
+            # pred_imgs = torch.stack(test_imgs).to('cuda')
+
+            # y = torch.argmax(net(test_imgs), dim=1).cpu().detach().numpy()
+
+            # pd.Series(y, name='class').to_csv('submission.csv',index_label='id')
+
+            img_url = request.session.get('image_url')
+            transform = transforms.Compose([
+                transforms.Resize(256),
+                transforms.CenterCrop(224),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            ])
+            img = Image.open(img_url)
+            img = transform(img)
+
+            # net = Net()
+            # net.load_state_dict(torch.lord())
+
+            with torch.no_grad():
+              y = net(img.unsqueeze(0))
+
+            request.session['y'] = y
+            
+
+          
             modelfile.proba = proba
             modelfile.animal_name = animal_name
             modelfile.save() # データを保存
+
 
 
         
