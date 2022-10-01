@@ -14,6 +14,7 @@ from .forms import ImageForm
 from model.animal_model import Net
 
 import torch
+import torch.nn.functional as F
 # import pandas as pd
 from torchvision import transforms
 from PIL import Image
@@ -109,10 +110,14 @@ def image_upload(request):
         form = ImageForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            img_name = request.FILES['image']
-            img_url = 'media/documents/{}'.format(img_name)
-            animal_name = '動物名'
-            proba = '3'
+            data = ModelFile.objects.get(id=ModelFile.objects.latest('id').id)
+            image_name = data.image
+            image_url = f'media/{image_name}'
+
+            # img_name = request.FILES['image']
+            # img_url = 'media/documents/{}'.format(img_name)
+
+
 
 
             # 最新の画像のデータを取得
@@ -138,35 +143,48 @@ def image_upload(request):
 
             # pd.Series(y, name='class').to_csv('submission.csv',index_label='id')
 
-            img_url = request.session.get('image_url')
+            # img_url = request.session.get('image_url')
             transform = transforms.Compose([
                 transforms.Resize(256),
                 transforms.CenterCrop(224),
                 transforms.ToTensor(),
                 transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
             ])
-            img = Image.open(img_url)
+            img = Image.open(image_url)
             img = transform(img)
 
-            # net = Net()
-            # net.load_state_dict(torch.lord())
+# keywords = ['パンダ', 'ゾウ', 'ホッキョクグマ', 'ゴリラ']
 
             with torch.no_grad():
               y = net(img.unsqueeze(0))
 
-            request.session['y'] = y
-            
+            y_arg = y.argmax()
+            # tensor => numpy 型に変換
+            y_arg = y_arg.detach().numpy()
+            # ラベルの設定
+            if y_arg == 1:
+                y_label = 'パンダ'
+            elif y_arg == 2:
+                y_label = 'ゾウ'
+            elif y_arg == 3:
+                y_label = 'ホッキョクグマ'
+            else:
+                y_label = 'ゴリラ'
 
+            # request.session['y'] = y
+            y = F.softmax(y)
+            # proba = y[0][y_arg]
+            proba = y[0, y_arg].item()
           
-            modelfile.proba = proba
-            modelfile.animal_name = animal_name
-            modelfile.save() # データを保存
-
+            # modelfile.proba = proba
+            # modelfile.animal_name = animal_name
+            # modelfile.save() # データを保存
 
 
         
-            context = {'img_url':img_url,'animal_name': animal_name, 'proba':proba}
+            context = {'img_url':image_url,'animal_name': y_label, 'proba':proba}
 
+        # return render(request, 'mlapp/image.html', {'img_url': image_url})
             
         return render(request, 'mlapp/image.html', context)
     else:
